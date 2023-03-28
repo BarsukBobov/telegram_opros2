@@ -260,8 +260,8 @@ async def callbacks(callback: types.CallbackQuery, state: FSMContext):
     if callback.data == "⏭":
         state_user += 1
         if len(data)-state_user==1:
-            txt='Вы ответили не на все вопросы! Для коректного теста необходимо ответить на все'
-            await bot.send_message(callback.from_user.id, txt)
+            # txt='Вы ответили не на все вопросы! Для коректного теста необходимо ответить на все'
+            # await bot.send_message(callback.from_user.id, txt)
             state_user -= 1
 
     elif callback.data == "⏮":
