@@ -1,3 +1,7 @@
+import asyncio
+import re
+
+from loguru import logger
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
@@ -7,26 +11,17 @@ import markups as btn
 from db import Database
 import config
 
-db = Database("sigh_in.db")
+db = Database("1.db")
+db.create_database()
 TOKEN = config.TOKEN
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
-
+pattern = r"^[-\w\.]+@([-\w]+\.)+[-\w]{2,4}$"
 
 class Fsm(StatesGroup):
-    NIF = State()
-    Nombre = State()
-    apellido = State()
-    Segundo_apellido = State()
-    Provincia = State()
-    Fecha = State()
-    conductor = State()
+    name = State()
     email = State()
-    phone = State()
-    accept = State()
-    city = State()
-    delete = State()
-    Pais = State()
+    user_naber = State()
 
 
 async def cancel(text, id, state):
@@ -36,164 +31,207 @@ async def cancel(text, id, state):
         return False
 
 
-####################################АДМИН########################################
-@dp.message_handler(IDFilter(chat_id=spisok), commands=['start'])
-async def admin(message: types.Message):
-    await bot.send_message(message.chat.id, btn.text1)
-    await bot.send_message(message.chat.id, 'Введите ваше имя:')
+async def result(data, id):
+    user_ie = 0
+    user_sn = 0
+    user_tf = 0
+    user_jp = 0
+    try:
+        if (data["user_naber_1"] == 'a'):
+            user_ie = user_ie + 1
+        if (data["user_naber_2"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_3"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_4"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_5"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_6"] == 'a'):
+            user_jp = user_jp + 1
+        if (data["user_naber_7"] == 'a'):
+            user_jp = user_jp + 1
 
-@dp.callback_query_handler()
-async def callbacks(callback: types.CallbackQuery, state: FSMContext):
-    await bot.answer_callback_query(callback_query_id=callback.id)
-    if callback.data == "Добавить":
-        await bot.send_message(callback.from_user.id, btn.Pais, reply_markup=btn.inline(btn.paises[0]))
-        await Fsm.Pais.set()
-        await state.update_data(state1=0)
-        return
-    if callback.data == "Удалить":
-        await bot.send_message(callback.from_user.id, db.get_all_sigh())
-        await Fsm.delete.set()
-        return
+        if (data["user_naber_8"] == 'a'):
+            user_ie = user_ie + 1
+        if (data["user_naber_9"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_10"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_11"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_12"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_13"] == 'a'):
+            user_jp = user_jp + 1
+        if (data["user_naber_14"] == 'a'):
+            user_jp = user_jp + 1
+
+        if (data["user_naber_15"] == 'a'):
+            user_ie = user_ie + 1
+        if (data["user_naber_16"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_17"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_18"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_19"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_20"] == 'a'):
+            user_jp = user_jp + 1
+        if (data["user_naber_21"] == 'a'):
+            user_jp = user_jp + 1
+
+        if (data["user_naber_22"] == 'a'):
+            user_ie = user_ie + 1
+        if (data["user_naber_23"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_24"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_25"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_26"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_27"] == 'a'):
+            user_jp = user_jp + 1
+        if (data["user_naber_28"] == 'a'):
+            user_jp = user_jp + 1
+
+        if (data["user_naber_29"] == 'a'):
+            user_ie = user_ie + 1
+        if (data["user_naber_30"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_31"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_32"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_33"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_34"] == 'a'):
+            user_jp = user_jp + 1
+        if (data["user_naber_35"] == 'a'):
+            user_jp = user_jp + 1
+
+        if (data["user_naber_36"] == 'a'):
+            user_ie = user_ie + 1
+        if (data["user_naber_37"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_38"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_39"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_40"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_41"] == 'a'):
+            user_jp = user_jp + 1
+        if (data["user_naber_42"] == 'a'):
+            user_jp = user_jp + 1
+
+        if (data["user_naber_43"] == 'a'):
+            user_ie = user_ie + 1
+        if (data["user_naber_44"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_45"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_46"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_47"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_48"] == 'a'):
+            user_jp = user_jp + 1
+        if (data["user_naber_49"] == 'a'):
+            user_jp = user_jp + 1
+
+        if (data["user_naber_50"] == 'a'):
+            user_ie = user_ie + 1
+        if (data["user_naber_51"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_52"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_53"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_54"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_55"] == 'a'):
+            user_jp = user_jp + 1
+        if (data["user_naber_56"] == 'a'):
+            user_jp = user_jp + 1
+
+        if (data["user_naber_57"] == 'a'):
+            user_ie = user_ie + 1
+        if (data["user_naber_58"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_59"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_60"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_61"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_62"] == 'a'):
+            user_jp = user_jp + 1
+        if (data["user_naber_63"] == 'a'):
+            user_jp = user_jp + 1
+
+        if (data["user_naber_64"] == 'a'):
+            user_ie = user_ie + 1
+        if (data["user_naber_65"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_66"] == 'a'):
+            user_sn = user_sn + 1
+        if (data["user_naber_67"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_68"] == 'a'):
+            user_tf = user_tf + 1
+        if (data["user_naber_69"] == 'a'):
+            user_jp = user_jp + 1
+        if (data["user_naber_70"] == 'a'):
+            user_jp = user_jp + 1
+    except:
+        pass
+    if (user_ie > 5):
+        user_i = 'E'
+    else:
+        user_i = 'I'
+
+    if (user_sn > 10):
+        user_n = 'S'
+    else:
+        user_n = 'N'
+    if (user_tf > 10):
+        user_f = 'T'
+    else:
+        user_f = 'F'
+
+    if (user_jp > 10):
+        user_p = 'J'
+    else:
+        user_p = 'P'
+
+    user_nnnn = user_i + user_n + user_f + user_p
+    sum=user_ie+user_sn+user_tf+user_jp
+    text=f"Буквенный код оценки: {user_nnnn}\nВашей оценкой является балл: {sum}/70\n" \
+         f"Баллы расширенные: {user_ie} {user_sn} {user_tf} {user_jp} "
+    await bot.send_message(id, text)
+    await bot.send_message(id, 'Спасибо! Тестирование закончилось.')
+    db.post_result(id, data['name'], data['email'], sum)
 
 
-####################################Добавить########################################
-@dp.message_handler(state=Fsm.Pais)
-async def bot_message(message: types.Message, state: FSMContext):
-    arg_dic = {
-        "text":message.text,
-        "state": state,
-        "id": message.from_user.id,
-    }
-    if await cancel(**arg_dic) is False:
-        return
+
+####################################СТАРТ########################################
+@dp.message_handler(commands=['start'])
+async def admin(message: types.Message, state: FSMContext):
+    await bot.send_message(message.chat.id, btn.text1, parse_mode='html')
+    await bot.send_message(message.chat.id, btn.name)
+    await Fsm.name.set()
 
 
-@dp.callback_query_handler(state=Fsm.Pais)
-async def callbacks(callback: types.CallbackQuery, state: FSMContext):
-    await bot.answer_callback_query(callback_query_id=callback.id)
-    if callback.data == "⏭":
-        user_data = await state.get_data()
-        await state.update_data(state1=user_data["state1"] + 1)
-        user_data = await state.get_data()
-        await bot.edit_message_text(callback.message.text, callback.from_user.id, callback.message.message_id,
-                                    reply_markup=btn.inline(btn.paises[user_data["state1"]]))
-        return
-    if callback.data == "⏮":
-        user_data = await state.get_data()
-        await state.update_data(state1=user_data["state1"] - 1)
-        user_data = await state.get_data()
-        await bot.edit_message_text(callback.message.text, callback.from_user.id, callback.message.message_id,
-                                    reply_markup=btn.inline(btn.paises[user_data["state1"]]))
-        return
-    await state.update_data(state1=0)
-    await state.update_data(Pais=callback.data)
-    await bot.send_message(callback.from_user.id, btn.city, reply_markup=btn.inline(btn.cities[0]))
-    await Fsm.city.set()
+####################################РЕГИСТРАЦИЯ########################################
 
-
-@dp.message_handler(state=Fsm.city)
+@dp.message_handler(state=Fsm.name)
 async def bot_message(message: types.Message, state: FSMContext):
     if await cancel(message.text, message.from_user.id, state) is False:
         return
-
-
-@dp.callback_query_handler(state=Fsm.city)
-async def callbacks(callback: types.CallbackQuery, state: FSMContext):
-    await bot.answer_callback_query(callback_query_id=callback.id)
-    if callback.data == "⏭":
-        user_data = await state.get_data()
-        await state.update_data(state1=user_data["state1"] + 1)
-        user_data = await state.get_data()
-        await bot.edit_message_text(callback.message.text, callback.from_user.id, callback.message.message_id,
-                                    reply_markup=btn.inline(btn.cities[user_data["state1"]]))
-        return
-    if callback.data == "⏮":
-        user_data = await state.get_data()
-        await state.update_data(state1=user_data["state1"] - 1)
-        user_data = await state.get_data()
-        await bot.edit_message_text(callback.message.text, callback.from_user.id, callback.message.message_id,
-                                    reply_markup=btn.inline(btn.cities[user_data["state1"]]))
-        return
-
-    await state.update_data(state1=0)
-    await state.update_data(city=callback.data)
-    await bot.send_message(callback.from_user.id, btn.NIF)
-    await Fsm.NIF.set()
-
-
-def anketa(fsm):
-    @dp.message_handler(state=Fsm.__dict__[fsm])
-    async def bot_message(message: types.Message, state: FSMContext):
-        if await cancel(message.text, message.from_user.id, state) is False:
-            return
-        r = await state.get_state()
-        dic = {r[4:]: message.text}
-        await state.update_data(dic)
-        await Fsm.next()
-        fsm2 = await state.get_state()
-        await bot.send_message(message.from_user.id, btn.__dict__[fsm2[4:]])
-
-
-anketa('NIF')
-anketa('Nombre')
-anketa('apellido')
-
-# anketa(Fsm.apellido, Fsm.Segundo_apellido, btn.Segundo_apellido)
-
-
-
-
-@dp.message_handler(state=Fsm.Segundo_apellido)
-async def bot_message(message: types.Message, state: FSMContext):
-    if await cancel(message.text, message.from_user.id, state) is False:
-        return
-    await state.update_data(Segundo_apellido=message.text)
-    await bot.send_message(message.from_user.id, btn.Provincia, reply_markup=btn.inline(btn.Provincias[0]))
-    await Fsm.Provincia.set()
-
-
-@dp.message_handler(state=Fsm.Provincia)
-async def bot_message(message: types.Message, state: FSMContext):
-    if await cancel(message.text, message.from_user.id, state) is False:
-        return
-
-
-@dp.callback_query_handler(state=Fsm.Provincia)
-async def callbacks(callback: types.CallbackQuery, state: FSMContext):
-    await bot.answer_callback_query(callback_query_id=callback.id)
-    if callback.data == "⏭":
-        user_data = await state.get_data()
-        await state.update_data(state1=user_data["state1"] + 1)
-        user_data = await state.get_data()
-        await bot.edit_message_text(callback.message.text, callback.from_user.id, callback.message.message_id,
-                                    reply_markup=btn.inline(btn.Provincias[user_data["state1"]]))
-        return
-    if callback.data == "⏮":
-        user_data = await state.get_data()
-        await state.update_data(state1=user_data["state1"] - 1)
-        user_data = await state.get_data()
-        await bot.edit_message_text(callback.message.text, callback.from_user.id, callback.message.message_id,
-                                    reply_markup=btn.inline(btn.Provincias[user_data["state1"]]))
-        return
-    await state.update_data(Provincia=callback.data)
-    await bot.send_message(callback.from_user.id, btn.Fecha)
-    await Fsm.Fecha.set()
-
-
-@dp.message_handler(state=Fsm.Fecha)
-async def bot_message(message: types.Message, state: FSMContext):
-    if await cancel(message.text, message.from_user.id, state) is False:
-        return
-    await state.update_data(Fecha=message.text)
-    await bot.send_message(message.from_user.id, btn.conductor)
-    await Fsm.conductor.set()
-
-
-@dp.message_handler(state=Fsm.conductor)
-async def bot_message(message: types.Message, state: FSMContext):
-    if await cancel(message.text, message.from_user.id, state) is False:
-        return
-    await state.update_data(conductor=message.text)
+    await state.update_data(name=message.text)
     await bot.send_message(message.from_user.id, btn.email)
     await Fsm.email.set()
 
@@ -202,55 +240,57 @@ async def bot_message(message: types.Message, state: FSMContext):
 async def bot_message(message: types.Message, state: FSMContext):
     if await cancel(message.text, message.from_user.id, state) is False:
         return
+    if not re.findall(pattern, message.text):
+        await bot.send_message(message.from_user.id, "Неверный емэйл, попробуйте снова")
+        return
     await state.update_data(email=message.text)
-    await bot.send_message(message.from_user.id, btn.phone)
-    await Fsm.phone.set()
+    await bot.send_message(message.from_user.id, btn.ready)
+    await bot.send_message(message.from_user.id, btn.user_naber_1, reply_markup=btn.choice)
+    await Fsm.user_naber.set()
+    await state.update_data(state=1)
 
 
-@dp.message_handler(state=Fsm.phone)
-async def bot_message(message: types.Message, state: FSMContext):
-    if await cancel(message.text, message.from_user.id, state) is False:
-        return
-    await state.update_data(phone=message.text)
-    user_data = await state.get_data()
-    del user_data['state1']
-    zapis = ''
-    for key in user_data:
-        zapis = f'{zapis}{key}:{user_data[key]}\n'
-    await bot.send_message(message.from_user.id, zapis + "\nПодтвердите запись.", reply_markup=btn.inline(btn.accept))
-    await Fsm.accept.set()
-
-
-@dp.message_handler(state=Fsm.accept)
-async def bot_message(message: types.Message, state: FSMContext):
-    if await cancel(message.text, message.from_user.id, state) is False:
-        return
-
-
-@dp.callback_query_handler(state=Fsm.accept)
+####################################КНОПКИ########################################
+@dp.callback_query_handler(state=Fsm.user_naber)
 async def callbacks(callback: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query_id=callback.id)
-    user_data = await state.get_data()
-    if callback.data == "Да":
-        await bot.send_message(callback.from_user.id, "Запись отправлена на мониторнг")
-        del user_data['state1']
-        db.post_sigh(user_data)
-    if callback.data == "Нет":
-        await bot.send_message(callback.from_user.id, "Отмена")
-    await state.finish()
+    await bot.delete_message(callback.from_user.id, callback.message.message_id)
+    data = await state.get_data(state)
+    state_user = data["state"]
+    if callback.data == "⏭":
+        state_user += 1
+        if len(data)-state_user==1:
+            txt='Вы ответили не на все вопросы! Для коректного теста необходимо ответить на все'
+            await bot.send_message(callback.from_user.id, txt)
+            state_user -= 1
 
+    elif callback.data == "⏮":
+        if state_user != 1:
+            state_user -= 1
+    else:
+        dic = {f"user_naber_{state_user}": callback.data}
+        await state.update_data(dic)
+        state_user += 1
+        if state_user == 70:
+            data = await state.get_data(state)
+            await result(data, callback.from_user.id)
+            await state.finish()
 
-####################################Удалить########################################
-@dp.message_handler(state=Fsm.delete)
-async def bot_message(message: types.Message, state: FSMContext):
-    if await cancel(message.text, message.from_user.id, state) is False:
-        return
-    if db.status(int(message.text)) is False:
-        await bot.send_message(message.from_user.id, "Такой строки не найдено.\nВыход из панели Админа.")
-        await state.finish()
-        return
-    await bot.send_message(message.from_user.id, "Запись была удалена.\nВыход из панели Админа.")
-    await state.finish()
+            return
+
+    await state.update_data(state=state_user)
+    txt = btn.__dict__[f"user_naber_{state_user}"]
+    try:
+        already_answer = data[f"user_naber_{state_user}"]
+        txt += f'''
+<i>Ваш ответ:{already_answer}
+</i>
+'''
+    except:
+        pass
+    await bot.send_message(callback.from_user.id, txt, reply_markup=btn.choice, parse_mode='html')
+    data = await state.get_data(state)
+    logger.info(data)
 
 
 if __name__ == "__main__":
