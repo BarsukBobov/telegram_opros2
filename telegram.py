@@ -39,8 +39,8 @@ async def cancel(text, id, state):
 ####################################АДМИН########################################
 @dp.message_handler(IDFilter(chat_id=spisok), commands=['start'])
 async def admin(message: types.Message):
-    await bot.send_message(message.chat.id, btn.text1, reply_markup=btn.inline(btn.buttons1))
-
+    await bot.send_message(message.chat.id, btn.text1)
+    await bot.send_message(message.chat.id, 'Введите ваше имя:')
 
 @dp.callback_query_handler()
 async def callbacks(callback: types.CallbackQuery, state: FSMContext):
