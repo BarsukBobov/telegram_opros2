@@ -12,7 +12,9 @@ from db import Database
 import config
 
 db = Database("1.db")
-db.create_database()
+
+# db.drop_table()
+db.create_table()
 TOKEN = config.TOKEN
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -21,12 +23,13 @@ pattern = r"^[-\w\.]+@([-\w]+\.)+[-\w]{2,4}$"
 class Fsm(StatesGroup):
     name = State()
     email = State()
+    mob_tel = State()
     user_naber = State()
 
 
 async def cancel(text, id, state):
     if text == "/cancel":
-        await bot.send_message(id, "Выход")
+        await bot.send_message(id, "Выход.\nЕсли хотите начать заново - /start")
         await state.finish()
         return False
 
@@ -213,7 +216,7 @@ async def result(data, id):
          f"Баллы расширенные: {user_ie} {user_sn} {user_tf} {user_jp} "
     await bot.send_message(id, text)
     await bot.send_message(id, 'Спасибо! Тестирование закончилось.')
-    db.post_result(id, data['name'], data['email'], sum)
+    db.post_result(id, data['name'], data['email'], data['mob_tel'], user_nnnn, user_ie, user_sn, user_tf, user_jp, sum)
 
 
 
@@ -225,7 +228,7 @@ async def admin(message: types.Message, state: FSMContext):
     await Fsm.name.set()
 
 
-####################################РЕГИСТРАЦИЯ########################################
+####################################АВТОРИЗАЦИЯ########################################
 
 @dp.message_handler(state=Fsm.name)
 async def bot_message(message: types.Message, state: FSMContext):
@@ -244,13 +247,36 @@ async def bot_message(message: types.Message, state: FSMContext):
         await bot.send_message(message.from_user.id, "Неверный емэйл, попробуйте снова")
         return
     await state.update_data(email=message.text)
-    await bot.send_message(message.from_user.id, btn.ready)
-    await bot.send_message(message.from_user.id, btn.user_naber_1, reply_markup=btn.choice)
-    await Fsm.user_naber.set()
+    await bot.send_message(message.from_user.id, btn.mob_tel)
+    await Fsm.next()
     await state.update_data(state=1)
+
+@dp.message_handler(state=Fsm.mob_tel)
+async def bot_message(message: types.Message, state: FSMContext):
+    if await cancel(message.text, message.from_user.id, state) is False:
+        return
+    try:
+        if len(message.text) == 11 and int(message.text):
+            await state.update_data(mob_tel=message.text)
+            await bot.send_message(message.from_user.id, btn.ready)
+            await bot.send_message(message.from_user.id, btn.user_naber_1, reply_markup=btn.choice)
+            await Fsm.next()
+            await state.update_data(state=1)
+            return
+    except:
+        pass
+    await bot.send_message(message.from_user.id, "Неверный номер, попробуйте снова")
+    return
+
 
 
 ####################################КНОПКИ########################################
+@dp.message_handler(state=Fsm.user_naber)
+async def bot_message(message: types.Message, state: FSMContext):
+    if await cancel(message.text, message.from_user.id, state) is False:
+        return
+
+
 @dp.callback_query_handler(state=Fsm.user_naber)
 async def callbacks(callback: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query_id=callback.id)
@@ -271,7 +297,7 @@ async def callbacks(callback: types.CallbackQuery, state: FSMContext):
         dic = {f"user_naber_{state_user}": callback.data}
         await state.update_data(dic)
         state_user += 1
-        if state_user == 70:
+        if state_user == 2:
             data = await state.get_data(state)
             await result(data, callback.from_user.id)
             await state.finish()
@@ -289,8 +315,9 @@ async def callbacks(callback: types.CallbackQuery, state: FSMContext):
     except:
         pass
     await bot.send_message(callback.from_user.id, txt, reply_markup=btn.choice, parse_mode='html')
-    data = await state.get_data(state)
-    logger.info(data)
+    
+    # data = await state.get_data(state)
+    # logger.info(data)
 
 
 if __name__ == "__main__":
