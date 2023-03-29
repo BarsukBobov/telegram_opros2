@@ -33,8 +33,15 @@ class Database:
             with self.connection:
                 self.cursor.execute(f"INSERT INTO users {keys} VALUES {l}")
         except:
+            new_l=(args[1:])
+            string=''
+            res = keys[1:-1].split(", ")
+            new_keys=(res[1:])
+            for elem in new_keys:
+                string+=f'{elem}=?, '
+            print(string[:-2])
             with self.connection:
-                self.cursor.execute(f"UPDATE users SET name=?, email=?, result =? WHERE chat_id={chat_id}", (name, email, result))
+                self.cursor.execute(f"UPDATE users SET {string[:-2]} WHERE chat_id={l[0]}", new_l)
 
     #Optional
     def drop_table(self):
